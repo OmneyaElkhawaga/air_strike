@@ -1,0 +1,182 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+	<title>pixi.js example 6 Interactivity</title>
+	<style>
+		body {
+			margin: 0;
+			padding: 0;
+			background-color: #000000;
+		}
+		
+		#help{
+			position: absolute;
+			z-index: 20;
+			color: black;
+			top: 20px;
+			left: 120px;
+		}
+	</style>
+
+
+	
+	<script src="pixi.js"></script>
+</head>
+<body>
+	<script>
+		
+	// create an new instance of a pixi stage
+	// the second parameter is interactivity...
+	var interactive = true;
+	var stage = new PIXI.Stage(0x000000, interactive);
+	
+	// create a renderer instance.
+	var renderer = PIXI.autoDetectRenderer(1920, 955);
+	
+	// add the renderer view element to the DOM
+	document.body.appendChild(renderer.view);
+	
+	requestAnimFrame( animate );
+	
+	// create a background..
+	var background = PIXI.Sprite.fromImage("button_test_BG.jpg");
+	
+	// add background to stage..
+	stage.addChild(background);
+	
+	// create some textures from an image path
+	var textureButton = PIXI.Texture.fromImage("images/button1.jpg");
+	var textureButton2 = PIXI.Texture.fromImage("images/button2.jpg");
+	var textureButton3 = PIXI.Texture.fromImage("images/button3.jpg");
+	var textureButtonDown = PIXI.Texture.fromImage("images/buttonDown.png");
+	var textureButtonOver = PIXI.Texture.fromImage("images/buttonOver.png");
+	
+	var buttons = [];
+	
+	var buttonPositions = [950,130,
+						   600-145, 400,
+						   600/2 - 20, 650,
+						    ]
+						   
+						   
+	for (var i=0; i < 3; i++) 
+	{   if(i===0)
+		{var button = new PIXI.Sprite(textureButton);}
+		if(i===1)
+		{var button = new PIXI.Sprite(textureButton2);}
+		if(i===2)
+		{var button = new PIXI.Sprite(textureButton3);}
+		
+		button.anchor.x = 0.5;
+		button.anchor.y = 0.5;
+		
+		button.position.x = buttonPositions[0];
+		button.position.y = buttonPositions[i*2 + 1];
+		
+		// make the button interactive..		
+		button.setInteractive(true);
+		
+		// set the mousedown and touchstart callback..
+		button.mousedown = button.touchstart = function(data){
+			
+			this.isdown = true;
+			this.setTexture(textureButtonDown);
+			this.alpha = 1;
+		}
+		
+		// set the mouseup and touchend callback..
+		button.mouseup = button.touchend = function(data){
+			this.isdown = false;
+			
+			if(this.isOver)
+			{
+				this.setTexture(textureButtonOver);
+			}
+			else
+			{
+				if(i===0)
+		{ this.setTexture(textureButton);}
+		if(i===1)
+		{this.setTexture(textureButton2);}
+		if(i===2)
+		{this.setTexture(textureButton3);}
+			}
+		}
+		
+		// set the mouseover callback..
+		button.mouseover = function(data){
+			
+			this.isOver = true;
+			
+			if(this.isdown)return
+			
+			this.setTexture(textureButtonOver)
+		}
+		
+		// set the mouseout callback..
+		button.mouseout = function(data){
+			
+			this.isOver = false;
+			 
+			 if(this.isdown) return
+		 this.setTexture(textureButton2); 
+		}
+		
+		
+		
+		button.tap = function(data){
+			 
+		}
+		 
+		// add it to the stage
+		stage.addChild(button);
+		
+		// add button to array
+		buttons.push(button);
+	};
+	
+	// set some silly values..
+	buttons[0].click = function(data){
+		  var win=window.open("index.html",'_self',false);
+		//	alert("CLICK!")
+		}
+	 
+	buttons[1].click = function(data){
+		  var win=window.open("index_medium.html",'_self',false);
+		//	alert("CLICK!")
+		}
+	  
+	buttons[2].click = function(data){
+		  var win=window.open("index_hard.html",'_self',false);
+		//	alert("CLICK!")
+		}
+	
+	// var button1 = 
+	function animate() {
+	
+	    requestAnimFrame( animate );
+	    // render the stage   
+	    
+	    // do a test..
+	   	
+	    renderer.render(stage);
+	}
+	
+	// add a logo!
+	var pixiLogo = PIXI.Sprite.fromImage("pixi.png");
+	stage.addChild(pixiLogo);
+	
+	pixiLogo.position.x = 620 - 56;
+	pixiLogo.position.y = 400- 32;
+	
+	pixiLogo.setInteractive(true);
+	
+	pixiLogo.click = pixiLogo.tap = function(){
+		
+		var win=window.open("https://github.com/GoodBoyDigital/pixi.js", '_blank');
+		
+	}
+	</script>
+
+	</body>
+</html>
